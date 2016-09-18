@@ -3,12 +3,12 @@ using System.Collections;
 
 public static class MeshGenerator {
 
-    public static MeshData GenerateTerrainMesh(float[,] borderedSizeMap, float borderedSizeMultiplier, AnimationCurve _borderedSizeCurve, int levelOfDetail)
+    public static MeshData GenerateTerrainMesh(float[,] heightMap, float heightMultiplier, AnimationCurve _heightCurve, int levelOfDetail)
     {
-        AnimationCurve borderedSizeCurve = new AnimationCurve(_borderedSizeCurve.keys);
+        AnimationCurve heightCurve = new AnimationCurve(_heightCurve.keys);
         int meshSimplificationIncrement = (levelOfDetail == 0) ? 1 : levelOfDetail * 2;
 
-        int borderedSize = borderedSizeMap.GetLength(0);
+        int borderedSize = heightMap.GetLength(0);
         int meshSize = borderedSize - 2 * meshSimplificationIncrement;
         int meshSizeUnsimplified = borderedSize - 2;
 
@@ -49,7 +49,7 @@ public static class MeshGenerator {
                 int vertexIndex = vertexIndicesMap[x, y];
 
                 Vector2 percent = new Vector2((x - meshSimplificationIncrement) / (float)meshSize, (y - meshSimplificationIncrement) / (float)meshSize);
-                float height = borderedSizeCurve.Evaluate(borderedSizeMap[x, y]) * borderedSizeMultiplier;
+                float height = heightCurve.Evaluate(heightMap[x, y]) * heightMultiplier;
                 Vector3 vertexPosition = new Vector3(topLeftX + percent.x * meshSizeUnsimplified, height, topLeftZ - percent.y * meshSizeUnsimplified);
 
                 meshData.AddVertex(vertexPosition, percent, vertexIndex);
